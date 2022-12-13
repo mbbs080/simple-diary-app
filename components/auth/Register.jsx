@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import style from "../../styles/Auth.module.css";
 
@@ -6,6 +6,8 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
 
   const formSubmit = async (e) => {
     e.preventDefault();
@@ -15,19 +17,46 @@ export default function Register() {
       email: email,
       password: password,
     };
-    try {
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      console.log(res.data);
-    } catch (err) {
-      console.log(err);
+
+    if (name && email && password) {
+      try {
+        let response = await fetch("/api/auth/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+        response = await response.json();
+
+        if (response.status === 200) {
+          setSuccess(true);
+          setName("");
+          setEmail("");
+          setPassword("");
+        } else {
+          return setError(true);
+        }
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
+
+  useEffect(() => {
+    const interval = setTimeout(() => {
+      setSuccess(false);
+    }, 3000);
+    return () => clearTimeout(interval);
+  });
+
+  useEffect(() => {
+    const interval = setTimeout(() => {
+      setError(false);
+    }, 3000);
+    return () => clearTimeout(interval);
+  });
 
   return (
     <main className={style.container}>
@@ -36,6 +65,10 @@ export default function Register() {
           <p className={style.home}>return home</p>
         </Link>
         <form onSubmit={formSubmit} className={style.form}>
+          {success && (
+            <p className={style.success}>You successfully created an account</p>
+          )}
+          {error && <p className={style.error}>Error, try again</p>}
           <div className={style.inputCover}>
             <input
               type="text"

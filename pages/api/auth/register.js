@@ -1,15 +1,18 @@
 import clientPromise from "../../../lib/mongodb";
+const bcrypt = require("bcryptjs");
 
-export default async (req, res, next) => {
+export default async (req, res) => {
   try {
-    const client = await clientPromise;
-    const db = client.db("posts");
-    const { name, email, password } = req.body;
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(req.body.password, salt);
 
-    const post = await db.collection("posts").insertOne({
-      name,
-      email,
-      password,
+    const client = await clientPromise;
+    const db = client.db("users");
+
+    const post = await db.collection("users").insertOne({
+      name: req.body.name,
+      email: req.body.email,
+      password: hash,
     });
 
     res.json(post);

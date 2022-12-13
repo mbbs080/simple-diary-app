@@ -24,6 +24,22 @@
   background: var(--color-black);
 }
 
+.success {
+  color: rgb(114, 236, 185);
+  font-size: small;
+  background: rgb(43, 87, 69);
+  padding: 0.3rem 2rem;
+  border-radius: 5px;
+}
+
+.error {
+  color: rgb(236, 128, 114);
+  font-size: small;
+  background: rgb(87, 52, 43);
+  padding: 0.3rem 2rem;
+  border-radius: 5px;
+}
+
 .inputCover {
   width: 100%;
   display: flex;

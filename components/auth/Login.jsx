@@ -6,8 +6,34 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const formSubmit = (e) => {
+  const formSubmit = async (e) => {
     e.preventDefault();
+
+    const data = {
+      email: email,
+      password: password,
+    };
+
+    if (email && password) {
+      try {
+        let response = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+
+        response = await response.json();
+
+        if (response.status === 200) {
+          setEmail("");
+          setPassword("");
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
   };
 
   return (

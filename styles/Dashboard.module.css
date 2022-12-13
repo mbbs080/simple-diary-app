@@ -15,6 +15,7 @@
 
 .link {
   padding: 0.2rem 0.5rem;
+  background: var(--color-dark-variant);
 }
 
 .headCover {
@@ -58,6 +59,20 @@
 .gridThree {
   background: var(--color-black);
   height: 25rem;
+}
+
+.success {
+  color: rgb(114, 236, 185);
+  font-size: small;
+  background: rgb(43, 87, 69);
+  padding: 0.3rem 2rem;
+}
+
+.error {
+  color: rgb(236, 128, 114);
+  font-size: small;
+  background: rgb(87, 52, 43);
+  padding: 0.3rem 2rem;
 }
 
 .createPost {
@@ -189,6 +204,19 @@ input.date {
   padding: 0.3rem;
   color: var(--color-white);
   font-size: small;
+  font-weight: 600;
+}
+
+.submit {
+  color: var(--color-black);
+  padding: 0.2rem 0.7rem;
+  margin-left: 0.3rem;
+  width: fit-content;
+  margin-top: 3rem;
+  background: var(--color-light);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
 }
 
 @media (max-width: 900px) {
