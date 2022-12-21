@@ -1,3 +1,4 @@
+import { getSession } from "next-auth/react";
 import clientPromise from "../../../lib/mongodb";
 
 export default async (req, res) => {
@@ -5,16 +6,19 @@ export default async (req, res) => {
     const client = await clientPromise;
     const db = client.db("posts");
 
-    const { title, body, author, time, date } = req.body;
+    const { user, title, body, dateInput, time, date } = req.body;
 
-    const post = await db.collection("posts").insertOne({
-      title,
-      body,
-      author,
-      dateInput,
-      time,
-      date,
-    });
+    const post = await db
+      .collection("posts")
+      .insertOne({
+        user,
+        title,
+        body,
+        dateInput,
+        time,
+        date,
+      })
+      .lean();
 
     res.json(post);
   } catch (e) {

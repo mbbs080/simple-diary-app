@@ -16,6 +16,9 @@
 .link {
   padding: 0.2rem 0.5rem;
   background: var(--color-dark-variant);
+  border: none;
+  color: var(--color-light);
+  cursor: pointer;
 }
 
 .headCover {

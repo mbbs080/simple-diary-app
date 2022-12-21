@@ -5,7 +5,7 @@ import style from "../../styles/Auth.module.css";
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
 
@@ -13,33 +13,33 @@ export default function Register() {
     e.preventDefault();
 
     const data = {
-      name: name,
+      username: username,
       email: email,
       password: password,
     };
 
-    if (name && email && password) {
+    if (username && email && password) {
       try {
-        let response = await fetch("/api/auth/register", {
+        const response = await fetch("/api/auth/register", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(data),
         });
-        response = await response.json();
 
-        if (response.status === 200) {
+        console.log(response);
+
+        if (response.status === 200 || response.status === 201) {
           setSuccess(true);
-          setName("");
+          setUsername("");
           setEmail("");
           setPassword("");
         } else {
           return setError(true);
         }
-        console.log(res);
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        throw error;
       }
     }
   };
@@ -73,11 +73,11 @@ export default function Register() {
             <input
               type="text"
               className={style.input}
-              name="name"
-              placeholder="name"
-              value={name}
+              name="username"
+              placeholder="username"
+              value={username}
               onChange={(e) => {
-                setName(e.target.value);
+                setUsername(e.target.value);
               }}
             />
             <input
@@ -94,7 +94,7 @@ export default function Register() {
           <div>
             <input
               className={style.input}
-              type="text"
+              type="password"
               name="password"
               placeholder="password"
               value={password}

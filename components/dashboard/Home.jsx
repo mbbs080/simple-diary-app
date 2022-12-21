@@ -1,4 +1,4 @@
-import style from "../../styles/Dashboard.module.css";
+/* import style from "../../styles/Dashboard.module.css";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -10,6 +10,7 @@ const QuillNoSSRWrapper = dynamic(import("react-quill"), {
   ssr: false,
   loading: () => <p>Loading ...</p>,
 });
+import { useSession, signOut } from "next-auth/react";
 
 /* const modules = {
   toolbar: [
@@ -27,7 +28,7 @@ const QuillNoSSRWrapper = dynamic(import("react-quill"), {
 }; */
 
 /// time of post in AM or PM
-const postTime = (date) => {
+/* const postTime = (date) => {
   var hours = date.getHours();
   var minutes = date.getMinutes();
   var ampm = hours >= 12 ? "pm" : "am";
@@ -41,9 +42,14 @@ const postTime = (date) => {
 /// date of post
 const month = new Date().toLocaleString("default", { month: "short" });
 const day = new Date().getUTCDate();
-const year = new Date().getUTCFullYear();
+const year = new Date().getUTCFullYear(); */
 
-export default function Home() {
+/* // sign out
+function handleSignOut() {
+  signOut();
+} */
+
+/* export default function Home({ postData }) {
   const [showDetails, setShowDetails] = useState(false);
   const [dateInput, setDateInput] = useState("");
   const [title, setTitle] = useState("");
@@ -55,58 +61,76 @@ export default function Home() {
   const [fields, setFields] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const postSubmit = async (e) => {
+  const { data: session } = useSession();
+
+  const onChange = (value) => setBody(value);
+  console.log(postData); */
+
+/* const postSubmit = async (e) => {
     e.preventDefault();
+    const user = session.user.email;
 
     const data = {
+      user: user,
       title: title,
       body: body,
-      author: author,
       dateInput: dateInput,
       time: time,
       date: date,
     };
 
-    if (title && body && author && dateInput) {
-      try {
-        let response = await fetch("/api/post/addPost", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        });
-        response = await response.json();
-        if (response.status === 200) {
-          setSuccess(true);
-        } else {
-          return setError(true);
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    } else {
-      return setFields(true);
-    }
+    const res = await fetch("http://localhost:3000/api/post/addPost", {
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    });
+
+    console.log(res);
   };
 
   useEffect(() => {
     const message = setTimeout(() => {
       setError(false);
-      setSuccess(false);
-      setFields(false);
     }, 3000);
     return () => clearTimeout(message);
   });
 
-  return (
+  useEffect(() => {
+    const message = setTimeout(() => {
+      setSuccess(false);
+    }, 3000);
+    return () => clearTimeout(message);
+  });
+
+  useEffect(() => {
+    const message = setTimeout(() => {
+      setFields(false);
+    }, 3000);
+    return () => clearTimeout(message);
+  }); */
+
+/* return (
     <main>
       <section className={style.homeCover}>
         <div className={style.headCover}>
           <h2 className={style.head}> diary dashboard</h2>
-          <Link href="/" className={style.link}>
-            logout
-          </Link>
+          {session ? (
+            <h4>{session.user.email}</h4>
+          ) : (
+            <Link href={"/login"}>login</Link>
+          )}
+          {session && (
+            <button
+              className={style.link}
+              onClick={() => {
+                signOut({ callbackUrl: "http://localhost:3000/" });
+              }}
+            >
+              logout
+            </button>
+          )}
         </div>
         <div className={style.homeGrid}>
           <div className={style.gridOne}>
@@ -138,7 +162,7 @@ export default function Home() {
                   className={style.postTitle}
                   value={title}
                   onChange={(e) => {
-                    setTitle(e, target.value);
+                    setTitle(e.target.value);
                   }}
                 />{" "}
                 <QuillNoSSRWrapper
@@ -146,70 +170,81 @@ export default function Home() {
                   placeholder="content here..."
                   className={style.editor}
                   value={body}
-                  onChange={(e) => {
-                    setBody(e.target.value);
-                  }}
+                  onChange={onChange}
                 />
               </div>
-              <button className={style.submit} type="submit">
-                submit
-              </button>
+              {session && (
+                <button className={style.submit} type="submit">
+                  submit
+                </button>
+              )}
             </form>
           </div>
           <div className={style.gridThree}>
             <p className={style.itemHead}>your dairy</p>
             <div className={style.listCover}>
-              <div className={style.single}>
-                <div className={style.dateCover}>
-                  <p>7:35pm</p>
-                  <p>December 21, 2022</p>
-                </div>
-                <div className={style.titleCover}>
-                  <div className={style.length}>
-                    17{" "}
-                    <span>
-                      <MdDeleteForever />
-                    </span>
-                  </div>
-                  <div className={style.titleIcon}>
-                    <h4
-                      className={style.title}
-                      onClick={() => {
-                        setShowDetails(!showDetails);
-                      }}
-                    >
-                      tile of the diary goes here
-                    </h4>
-                    {showDetails ? (
-                      <h2>
-                        <BiUpArrowAlt
-                          onClick={() => {
-                            setShowDetails(false);
-                          }}
-                        />
-                      </h2>
-                    ) : (
-                      <h2>
-                        <BiDownArrowAlt
-                          onClick={() => {
-                            setShowDetails(true);
-                          }}
-                        />
-                      </h2>
-                    )}
-                  </div>
-                  {showDetails && (
-                    <div className={style.postDetails}>
-                      the text of the main content of my post containing all of
-                      the relevant content you can find containing the post.
+              {postData.map((post) => {
+                return (
+                  <div key={post._id} className={style.single}>
+                    <div className={style.dateCover}>
+                      <p>{post.time}</p>
+                      <p>{post.date}</p>
                     </div>
-                  )}
-                </div>
-              </div>
+                    <div className={style.titleCover}>
+                      <div className={style.length}>
+                        17{" "}
+                        <span>
+                          <MdDeleteForever />
+                        </span>
+                      </div>
+                      <div className={style.titleIcon}>
+                        <h4
+                          className={style.title}
+                          onClick={() => {
+                            setShowDetails(!showDetails);
+                          }}
+                        >
+                          {post.title}
+                        </h4>
+                        {showDetails ? (
+                          <h2>
+                            <BiUpArrowAlt
+                              onClick={() => {
+                                setShowDetails(false);
+                              }}
+                            />
+                          </h2>
+                        ) : (
+                          <h2>
+                            <BiDownArrowAlt
+                              onClick={() => {
+                                setShowDetails(true);
+                              }}
+                            />
+                          </h2>
+                        )}
+                      </div>
+                      {showDetails && (
+                        <div className={style.postDetails}>{post.body}</div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
       </section>
     </main>
   );
-}
+} */
+
+/* export async function getServerSideProps() {
+  const res = await fetch("http://localhost:3000/api/post/getPosts");
+
+  const postData = await res.json();
+
+  return {
+    props: { postData },
+  };
+}  */

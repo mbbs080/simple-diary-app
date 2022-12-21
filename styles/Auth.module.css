@@ -59,6 +59,22 @@
   font-weight: 700;
 }
 
+.google {
+  color: var(--color-light);
+  background: transparent;
+  font-weight: bold;
+  padding: 0.2rem 0.7rem;
+  border: none;
+  cursor: pointer;
+  border: 2px solid var(--color-dark);
+  border-radius: 0.2rem;
+}
+
+.google:hover {
+  color: var(--color-black);
+  background: var(--color-light);
+}
+
 .btn {
   background: transparent;
   border: none;

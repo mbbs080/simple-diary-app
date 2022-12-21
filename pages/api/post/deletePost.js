@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb";
+/* import { ObjectId } from "mongodb";
 import { ClientPromise } from "../../../lib/mongodb";
 
 export default async (req, res) => {
@@ -16,4 +16,4 @@ export default async (req, res) => {
     console.error(e);
     throw new Error(e).message;
   }
-};
+}; */

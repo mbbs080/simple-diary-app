@@ -1,15 +1,19 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
-const PostSchema = new mongoose.Schema({
+const PostSchema = new Schema({
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "user",
+  },
   title: {
     type: String,
     required: true,
   },
-  author: {
-    type: String,
-    required: false,
-  },
   body: {
+    type: String,
+    required: true,
+  },
+  dateInput: {
     type: String,
     required: true,
   },
@@ -23,6 +27,6 @@ const PostSchema = new mongoose.Schema({
   },
 });
 
-const Post = mongoose.model("Post", PostSchema);
+const Post = mongoose.models.Post || mongoose.model("Post", PostSchema);
 
-module.exports = Post;
+export default Post;
